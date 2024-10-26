@@ -16,7 +16,6 @@ export default function TabLayout({ navigation }: Props) {
     <Tab.Navigator
       screenOptions={{
         tabBarActiveTintColor: 'black',
-
         headerShown: false,
       }}>
       <Tab.Screen

@@ -4,8 +4,8 @@ import 'react-native-gesture-handler';
 
 import RootStack from './navigation';
 import { useState } from 'react';
-import { Text } from 'react-native';
 import { SplashScreen } from 'components/SplashScreen';
+import { AuthProvider } from 'context/AuthContext';
 
 const App = () => {
   const [splashScreenLoading, setSplashScreenLoading] = useState(true);
@@ -18,7 +18,11 @@ const App = () => {
     return <SplashScreen />;
   }
 
-  return <RootStack />;
+  return (
+    <AuthProvider>
+      <RootStack />
+    </AuthProvider>
+  );
 };
 
 export default App;
