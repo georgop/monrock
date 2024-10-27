@@ -6,7 +6,6 @@ module.exports = {
     './screens/**/*.{js,ts,tsx}',
     './navigation/**/*.{js,ts,tsx}',
   ],
-
   presets: [require('nativewind/preset')],
   theme: {
     extend: {},

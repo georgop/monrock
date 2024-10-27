@@ -6,10 +6,11 @@ import DrawerNavigator from './drawer-navigator';
 import Modal from '../screens/modal';
 import Login from '../screens/Login';
 import { useAuth } from '../context/AuthContext';
+import Home from 'screens/Home';
 
 export type RootStackParamList = {
   DrawerNavigator: undefined;
-  Modal: undefined;
+  Home: undefined;
   Login: undefined;
 };
 
@@ -23,12 +24,7 @@ export default function RootStack() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {isLoggedIn ? (
           <>
-            <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
-            <Stack.Screen
-              name="Modal"
-              component={Modal}
-              options={{ presentation: 'modal', headerLeft: () => null }}
-            />
+            <Stack.Screen name="Home" component={Home} />
           </>
         ) : (
           <Stack.Screen name="Login" component={Login} />

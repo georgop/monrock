@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Animated, View, Image } from 'react-native';
 import { Logo } from 'assets/Logo';
 import { LinearGradient } from 'expo-linear-gradient';
-import { SplashScreenText } from 'assets/SplashScreenText';
+import { SplashScreenText } from 'assets/svg/SplashScreenText';
 
 export const SplashScreen = () => {
   const translateY = useRef(new Animated.Value(0)).current;

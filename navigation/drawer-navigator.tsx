@@ -5,7 +5,7 @@ import { HeaderButton } from 'components/HeaderButton';
 
 import { RootStackParamList } from '.';
 import TabNavigator from './tab-navigator';
-import Home from '../screens/home';
+import Home from '../screens/Home';
 
 type Props = StackScreenProps<RootStackParamList, 'DrawerNavigator'>;
 
@@ -15,7 +15,7 @@ export default function DrawerNavigator({ navigation }: Props) {
   return (
     <Drawer.Navigator>
       <Drawer.Screen
-        name="Home"
+        name="Home1"
         component={Home}
         options={{
           drawerIcon: ({ size, color }) => (
@@ -23,7 +23,7 @@ export default function DrawerNavigator({ navigation }: Props) {
           ),
         }}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="Tabs"
         component={TabNavigator}
         options={{
@@ -32,7 +32,7 @@ export default function DrawerNavigator({ navigation }: Props) {
             <MaterialIcons name="border-bottom" size={size} color={color} />
           ),
         }}
-      />
+      /> */}
     </Drawer.Navigator>
   );
 }
