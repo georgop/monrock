@@ -12,6 +12,7 @@ export type RootStackParamList = {
   DrawerNavigator: undefined;
   Home: undefined;
   Login: undefined;
+  Modal: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
