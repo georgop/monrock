@@ -5,6 +5,7 @@ import Login from '../screens/Login';
 import { useAuth } from '../context/AuthContext';
 import Home from 'screens/Home';
 import { Booking } from 'screens/Booking';
+import { MediaLibrary } from 'screens/MediaLibrary';
 
 export type RootStackParamList = {
   DrawerNavigator: undefined;
@@ -12,6 +13,7 @@ export type RootStackParamList = {
   Login: undefined;
   Modal: undefined;
   Booking: { advertisingSpotId: number };
+  MediaLibrary: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -26,6 +28,7 @@ export default function RootStack() {
           <>
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Booking" component={Booking} />
+            <Stack.Screen name="MediaLibrary" component={MediaLibrary} />
           </>
         ) : (
           <Stack.Screen name="Login" component={Login} />

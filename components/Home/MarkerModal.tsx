@@ -114,7 +114,10 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({ visible, onClose, mark
         </View>
         <TouchableOpacity
           className="w-[191px] self-center"
-          onPress={() => navigation.navigate('Booking', { advertisingSpotId: marker.id })}>
+          onPress={() => {
+            onClose();
+            navigation.navigate('Booking', { advertisingSpotId: marker.id });
+          }}>
           <Text className="rounded-[9999px] border-[1px] border-[#005AD0] px-6 py-[13px] text-center text-[16px] font-semibold text-[#005AD0]">
             Available monitors
           </Text>

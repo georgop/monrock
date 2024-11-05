@@ -1,81 +1,65 @@
-import React, { useState } from 'react';
-import { View, Text, Alert, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Alert, TouchableOpacity, Modal, Image, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
+import { FFmpegKit, FFprobeKit } from 'ffmpeg-kit-react-native';
+import { VideoInfo, pickVideoAndExtractInfo } from 'utils/pickVideoAndExtractInfo';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ExitIcon } from 'assets/svg/ExitIcon';
+import { GoBackIcon } from 'assets/svg/GoBackIcon';
+import { v } from '@faker-js/faker/dist/airline-WjISwexU';
 
-type VideoDetails = {
-  uri: string;
-  duration: number; // in seconds
-  size: number; // in bytes
+export type AddMediaProps = {
+  isOpen: boolean;
+  setIsOpen: (value: boolean) => void;
 };
 
-export const AddMedia = () => {
-  const [videoDetails, setVideoDetails] = useState<VideoDetails | null>(null);
-
-  const pickVideo = async (): Promise<string | null> => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permissionResult.granted) {
-      Alert.alert('Permission required', 'Permission to access the media library is required!');
-      return null;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Videos,
-      allowsEditing: false,
-      quality: 1,
-    });
-
-    return !result.canceled ? result.assets[0].uri : null;
-  };
-
-  const getVideoDetails = async (uri: string): Promise<VideoDetails | null> => {
-    const soundObject = new Audio.Sound();
+export const AddMedia: React.FC<AddMediaProps> = ({ isOpen, setIsOpen }) => {
+  const [videos, setVideos] = useState<VideoInfo[]>([]);
+  const fetchVideos = async () => {
     try {
-      await soundObject.loadAsync({ uri });
-      const status = await soundObject.getStatusAsync();
-
-      // Check if the status is successful
-      if (status.isLoaded) {
-        const duration = status.durationMillis ? status.durationMillis / 1000 : 0; // Convert to seconds
-        const fileInfo = await FileSystem.getInfoAsync(uri);
-
-        return {
-          uri,
-          duration,
-          size: 0, // File size in bytes
-        };
-      } else {
-        console.error('Error: Unable to load video status.');
-        return null;
+      const videoInfo = await AsyncStorage.getItem('videoInfo');
+      if (videoInfo !== null) {
+        const parsedVideos = JSON.parse(videoInfo);
+        setVideos(parsedVideos);
       }
     } catch (error) {
-      console.error('Error loading video', error);
-      return null;
-    } finally {
-      await soundObject.unloadAsync();
+      console.error('Error fetching videos:', error);
     }
   };
 
-  const handlePickVideo = async () => {
-    const uri = await pickVideo();
-    if (uri) {
-      const details = await getVideoDetails(uri);
-      setVideoDetails(details);
-    }
-  };
+  useEffect(() => {
+    fetchVideos();
+  }, []);
 
   return (
-    <View style={{ padding: 20 }}>
-      <TouchableOpacity onPress={handlePickVideo}>
-        <Text>Pick a video</Text>
-      </TouchableOpacity>
-      {videoDetails && (
-        <View style={{ marginTop: 20 }}>
-          <Text>Duration: {videoDetails.duration.toFixed(2)} seconds</Text>
-          <Text>Size: {(videoDetails.size / (1024 * 1024)).toFixed(2)} MB</Text>
+    <Modal visible={isOpen} animationType="slide" onRequestClose={() => setIsOpen(false)}>
+      <View className="z-[100] flex h-[64px] flex-row items-center justify-between">
+        <TouchableOpacity onPress={() => setIsOpen(false)} className="flex w-20 items-center">
+          <GoBackIcon />
+        </TouchableOpacity>
+        <Text className="text-[22px] font-semibold">Select media</Text>
+        <View className="w-20" />
+      </View>
+      <View>
+        <View className="p-6">
+          {videos.map((video, index) => (
+            <View key={index} className="mt-6 flex flex-row gap-6">
+              <Image
+                source={{ uri: video.thumbnailUri }}
+                className="h-[88px] w-[88px] rounded-[24px]"
+              />
+              <View>
+                <Text className="text-lg font-semibold">Video {index + 1}</Text>
+                <Text className="text-sm">{video.duration}</Text>
+                <Text className="text-sm">{video.size} MB</Text>
+                <Text className="text-sm">{video.duration}</Text>
+              </View>
+            </View>
+          ))}
         </View>
-      )}
-    </View>
+      </View>
+    </Modal>
   );
 };

@@ -1,16 +1,4 @@
-import {
-  Defs,
-  FeBlend,
-  FeColorMatrix,
-  FeComposite,
-  FeFlood,
-  FeGaussianBlur,
-  FeOffset,
-  Filter,
-  G,
-  Path,
-  Svg,
-} from 'react-native-svg';
+import { Defs, G, Path, Svg } from 'react-native-svg';
 
 export type MarkerIconProps = {
   width: number;

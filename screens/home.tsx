@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Animated, View, Text, TouchableWithoutFeedback } from 'react-native';
+import { useState } from 'react';
+import { Animated, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { HomeTabs } from 'components/Home/HomeTabs';
 import { SearchBar } from 'components/Home/SearchBar';
@@ -75,19 +75,17 @@ export const Home = () => {
               onPress={() => handleMarkerPress(marker)}
               tracksViewChanges={false}
               hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}>
-              <TouchableWithoutFeedback onPress={() => handleMarkerPress(marker)}>
-                <MarkerIcon
-                  width={49}
-                  height={52}
-                  color={
-                    marker.availability === 0
-                      ? '#005AD0'
-                      : marker.availability === 1
-                        ? '#FF9900'
-                        : '#ABB8BD'
-                  }
-                />
-              </TouchableWithoutFeedback>
+              <MarkerIcon
+                width={49}
+                height={52}
+                color={
+                  marker.availability === 0
+                    ? '#005AD0'
+                    : marker.availability === 1
+                      ? '#FF9900'
+                      : '#ABB8BD'
+                }
+              />
             </Marker>
           ))}
       </MapView>

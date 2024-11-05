@@ -1,9 +1,9 @@
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { Header } from 'components/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { MonitorsCarousel } from 'components/CardCarousel';
-import { useEffect, useState } from 'react';
+import { MonitorsCarousel } from 'components/Booking/MonitorsCarousel';
+import { useState } from 'react';
 import { CreateVideoPlaylist } from 'components/Booking/CreateVideoPlaylist';
 
 type BookingRouteParams = {

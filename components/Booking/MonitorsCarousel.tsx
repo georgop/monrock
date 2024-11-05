@@ -61,23 +61,23 @@ export const MonitorsCarousel: React.FC<MonitorsCarouselProps> = ({
                 ))}
               </View>
               <View className="mt-4 flex flex-col items-center justify-center">
-                <Text className="text-[16px] font-normal text-[#293037]">
+                <Text className="text-[18px] font-normal text-[#293037]">
                   Max video ad space per day
                 </Text>
-                <Text className="text-[16px] font-semibold text-[#293037]">
+                <Text className="text-[18px] font-semibold text-[#293037]">
                   {items[index].maxVideoAdSpacePerDay}
                 </Text>
               </View>
               <View className="mt-4 flex flex-col items-center justify-center">
-                <Text className="text-[16px] font-normal text-[#293037]">Available days</Text>
-                <Text className="text-[16px] font-semibold text-[#293037]">Open calendar</Text>
+                <Text className="text-[18px] font-normal text-[#293037]">Available days</Text>
+                <Text className="text-[18px] font-semibold text-[#293037]">Open calendar</Text>
               </View>
             </View>
             <TouchableOpacity
               className="mb-4 w-[191px] self-center"
               onPress={() => setCurrentState('create-video-playlist')}>
-              <Text className="rounded-[9999px] border-[1px] border-[#005AD0] bg-[#005AD0] px-6 py-[13px] text-center text-[16px] font-semibold text-[#FFFFFF]">
-                Available monitors
+              <Text className="rounded-[9999px] border-[1px] border-[#005AD0] bg-[#005AD0] px-8 py-[16px] text-center text-[20px] font-semibold text-[#FFFFFF]">
+                Book monitors
               </Text>
             </TouchableOpacity>
           </View>
