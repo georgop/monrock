@@ -6,6 +6,7 @@ import RootStack from './navigation';
 import { useState } from 'react';
 import { SplashScreen } from 'components/SplashScreen';
 import { AuthProvider } from 'context/AuthContext';
+import 'react-native-get-random-values';
 
 const App = () => {
   const [splashScreenLoading, setSplashScreenLoading] = useState(true);

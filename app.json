@@ -3,32 +3,43 @@
     "name": "monrock",
     "slug": "monrock",
     "version": "1.0.0",
-
     "web": {
       "favicon": "./assets/favicon.png"
     },
-
     "experiments": {
       "tsconfigPaths": true
     },
-
+    "splash": {
+      "backgroundColor": "#ffffff"
+     },
     "plugins": [],
-
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-
+    "icon": "./assets/favicon.png",
     "userInterfaceStyle": "light",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
     "android": {
+      "package": "com.monrock",
+      "versionCode": 1,
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey" : "AIzaSyAbd_kICSJ0e69Cuajvh1rQrvqvIykSLFA"
+        }
       }
-      
+    },
+    "extra": {
+      "eas": {
+        "projectId": "64411e00-2e53-4370-b17a-64a6e488f1ba"
+      }
     }
   }
 }
