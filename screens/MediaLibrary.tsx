@@ -2,14 +2,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { HamburgerIcon } from 'assets/svg/HamburgerIcon';
 import Drawer from 'components/Home/Drawer';
 import { VideosCarousel } from 'components/MediaLibrary/VideosCarousel';
+import { ScreenHeader } from 'components/ScreenHeader';
 import { useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, Animated, Alert } from 'react-native';
+import { Text, View, TouchableOpacity, Animated, Alert, LayoutChangeEvent } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { VideoInfo, pickVideoAndExtractInfo } from 'utils/pickVideoAndExtractInfo';
 
 export const MediaLibrary = () => {
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [animation] = useState(new Animated.Value(0));
   const [videos, setVideos] = useState<VideoInfo[]>([]);
   const fetchVideos = async () => {
     try {
@@ -26,18 +25,6 @@ export const MediaLibrary = () => {
   useEffect(() => {
     fetchVideos();
   }, []);
-
-  const toggleDrawer = () => {
-    const toValue = drawerOpen ? 0 : 1;
-
-    Animated.timing(animation, {
-      toValue,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-
-    setDrawerOpen(!drawerOpen);
-  };
 
   const handlePickVideo = async () => {
     const info = await pickVideoAndExtractInfo();
@@ -57,19 +44,29 @@ export const MediaLibrary = () => {
     }
   };
 
+  type Dimensions = {
+    width: number;
+    height: number;
+  };
+  const [dimensions, setDimensions] = useState<Dimensions>({ width: 100, height: 100 });
+
+  const onLayout = (event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout;
+    setDimensions({ width, height });
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <View className="z-[100] flex h-[64px] flex-row items-center justify-between">
-        <TouchableOpacity onPress={toggleDrawer} className="flex w-20 items-center">
-          <HamburgerIcon />
-        </TouchableOpacity>
-        <Text className="text-[22px] font-semibold">Media library</Text>
-        <View className="w-20" />
+      <ScreenHeader label="Media library" />
+      <View className="flex flex-1 items-center justify-center" onLayout={onLayout}>
+        <VideosCarousel
+          videos={videos}
+          setVideos={setVideos}
+          width={dimensions.width}
+          height={dimensions.height}
+        />
       </View>
-      <View className="flex flex-1 items-center justify-center">
-        <VideosCarousel videos={videos} setVideos={setVideos} />
-      </View>
-      <View className="h-[150px]">
+      <View className="flex h-[150px] items-center justify-center">
         <TouchableOpacity
           className="self-center"
           onPress={() => {
@@ -80,9 +77,6 @@ export const MediaLibrary = () => {
           </Text>
         </TouchableOpacity>
       </View>
-      {drawerOpen && (
-        <Drawer animation={animation} isOpen={drawerOpen} toggleDrawer={toggleDrawer} />
-      )}
     </SafeAreaView>
   );
 };

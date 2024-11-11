@@ -1,21 +1,41 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Alert, TouchableOpacity, Modal, Image, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  Alert,
+  TouchableOpacity,
+  Modal,
+  Image,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
-import { FFmpegKit, FFprobeKit } from 'ffmpeg-kit-react-native';
 import { VideoInfo, pickVideoAndExtractInfo } from 'utils/pickVideoAndExtractInfo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ExitIcon } from 'assets/svg/ExitIcon';
 import { GoBackIcon } from 'assets/svg/GoBackIcon';
 import { v } from '@faker-js/faker/dist/airline-WjISwexU';
+import { EmptyCheckbox } from 'assets/svg/EmptyCheckbox';
+import { CheckedCheckbox } from 'assets/svg/CheckedCheckbox';
+import { calculateAdSpaces, formatDuration } from 'utils/format';
+import { PlayIcon } from 'assets/svg/PlayIcon';
+import { NotApprovedVideoIcon } from 'assets/svg/NotApprovedVideoIcon';
 
 export type AddMediaProps = {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
+  selectedVideos: VideoInfo[];
+  setSelectedVideos: (value: VideoInfo[]) => void;
 };
 
-export const AddMedia: React.FC<AddMediaProps> = ({ isOpen, setIsOpen }) => {
+export const AddMedia: React.FC<AddMediaProps> = ({
+  isOpen,
+  setIsOpen,
+  selectedVideos,
+  setSelectedVideos,
+}) => {
   const [videos, setVideos] = useState<VideoInfo[]>([]);
   const fetchVideos = async () => {
     try {
@@ -33,6 +53,15 @@ export const AddMedia: React.FC<AddMediaProps> = ({ isOpen, setIsOpen }) => {
     fetchVideos();
   }, []);
 
+  const handleSelectVideo = (video: VideoInfo) => () => {
+    const index = selectedVideos.findIndex((v) => v.id === video.id);
+    if (index === -1) {
+      setSelectedVideos([...selectedVideos, video]);
+    } else {
+      setSelectedVideos(selectedVideos.filter((v) => v.id !== video.id));
+    }
+  };
+
   return (
     <Modal visible={isOpen} animationType="slide" onRequestClose={() => setIsOpen(false)}>
       <View className="z-[100] flex h-[64px] flex-row items-center justify-between">
@@ -42,24 +71,71 @@ export const AddMedia: React.FC<AddMediaProps> = ({ isOpen, setIsOpen }) => {
         <Text className="text-[22px] font-semibold">Select media</Text>
         <View className="w-20" />
       </View>
-      <View>
-        <View className="p-6">
-          {videos.map((video, index) => (
-            <View key={index} className="mt-6 flex flex-row gap-6">
+      <ScrollView className="flex-1 px-6 pb-6">
+        {videos.map((video, index) => (
+          <TouchableOpacity
+            key={index}
+            className="mt-6 flex flex-row items-center justify-between"
+            disabled={!video.isApproved}
+            onPress={handleSelectVideo(video)}>
+            <View>
               <Image
                 source={{ uri: video.thumbnailUri }}
                 className="h-[88px] w-[88px] rounded-[24px]"
               />
-              <View>
-                <Text className="text-lg font-semibold">Video {index + 1}</Text>
-                <Text className="text-sm">{video.duration}</Text>
-                <Text className="text-sm">{video.size} MB</Text>
-                <Text className="text-sm">{video.duration}</Text>
+              <View
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundColor: video.isApproved
+                    ? 'rgba(0, 0, 0, 0.3)'
+                    : 'rgba(180,180,180,0.6)', // slightly transparent dark overlay
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 24,
+                }}>
+                {video.isApproved ? <PlayIcon /> : <NotApprovedVideoIcon />}
               </View>
             </View>
-          ))}
-        </View>
-      </View>
+            <View className="ml-4 flex-1 justify-center">
+              <Text
+                className="text-lg font-semibold"
+                numberOfLines={1}
+                style={{ color: video.isApproved ? 'black' : 'rgba(180,180,180,0.6)' }}>
+                {video.fileName}
+              </Text>
+              <Text
+                className="text-sm"
+                style={{ color: video.isApproved ? 'black' : 'rgba(180,180,180,0.6)' }}>
+                {video.resolution.width} x {video.resolution.height}
+              </Text>
+              <Text
+                className="text-sm"
+                style={{ color: video.isApproved ? 'black' : 'rgba(180,180,180,0.6)' }}>
+                {formatDuration(video.duration)} / {calculateAdSpaces(video.duration)} ad space
+                {calculateAdSpaces(video.duration) > 1 ? 's' : ''}
+              </Text>
+              <Text
+                className="text-sm"
+                style={{ color: video.isApproved ? 'black' : 'rgba(180,180,180,0.6)' }}>
+                {video.size} MB
+              </Text>
+            </View>
+            {video.isApproved && (
+              <TouchableOpacity className="flex-shrink-0">
+                {selectedVideos.find((v) => v.id === video.id) ? (
+                  <CheckedCheckbox />
+                ) : (
+                  <EmptyCheckbox />
+                )}
+              </TouchableOpacity>
+            )}
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
     </Modal>
   );
 };

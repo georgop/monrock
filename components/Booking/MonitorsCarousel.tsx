@@ -1,5 +1,7 @@
 import { he } from '@faker-js/faker/.';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { advertisingSpots } from 'mocks/data';
+import { Monitor } from 'mocks/types';
 import * as React from 'react';
 import { Dimensions, Text, View, Image, TouchableOpacity } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
@@ -19,6 +21,15 @@ export const MonitorsCarousel: React.FC<MonitorsCarouselProps> = ({
   const height = Dimensions.get('window').height;
 
   const items = advertisingSpots.find((spot) => spot.id === advertisingSpotId)?.monitors;
+
+  const handleBookMonitor = async (monitor: Monitor) => {
+    try {
+      await AsyncStorage.setItem('selectedMonitor', JSON.stringify(monitor));
+      setCurrentState('create-video-playlist');
+    } catch (error) {
+      console.error('Failed to save monitor to AsyncStorage:', error);
+    }
+  };
 
   if (!items) return null;
 
@@ -75,9 +86,9 @@ export const MonitorsCarousel: React.FC<MonitorsCarouselProps> = ({
             </View>
             <TouchableOpacity
               className="mb-4 w-[191px] self-center"
-              onPress={() => setCurrentState('create-video-playlist')}>
+              onPress={() => handleBookMonitor(items[index])}>
               <Text className="rounded-[9999px] border-[1px] border-[#005AD0] bg-[#005AD0] px-8 py-[16px] text-center text-[20px] font-semibold text-[#FFFFFF]">
-                Book monitors
+                Book monitor
               </Text>
             </TouchableOpacity>
           </View>

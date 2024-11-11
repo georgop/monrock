@@ -5,6 +5,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MonitorsCarousel } from 'components/Booking/MonitorsCarousel';
 import { useState } from 'react';
 import { CreateVideoPlaylist } from 'components/Booking/CreateVideoPlaylist';
+import { SetPlaybackDate } from 'components/Booking/SetPlaybackDate';
+import { BookingOverview } from 'components/Booking/BookingOverview';
 
 type BookingRouteParams = {
   advertisingSpotId: number;
@@ -31,7 +33,17 @@ export const Booking = () => {
       )}
       {currentState === 'create-video-playlist' && (
         <View>
-          <CreateVideoPlaylist />
+          <CreateVideoPlaylist setCurrentState={setCurrentState} />
+        </View>
+      )}
+      {currentState === 'set-playback-date' && (
+        <View>
+          <SetPlaybackDate setCurrentState={setCurrentState} />
+        </View>
+      )}
+      {currentState === 'complete-order' && (
+        <View>
+          <BookingOverview setCurrentState={setCurrentState} />
         </View>
       )}
     </SafeAreaView>

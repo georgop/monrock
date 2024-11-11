@@ -26,7 +26,9 @@ export const HomeTabs = () => {
         elevation: 4,
       }}>
       <View className="flex h-full flex-row items-center justify-between p-2">
-        <TouchableOpacity className="flex-1 items-center justify-center">
+        <TouchableOpacity
+          className="flex-1 items-center justify-center"
+          onPress={() => navigation.navigate('Scheduled')}>
           <ScheduledIcon width={24} height={24} />
         </TouchableOpacity>
         <View className="h-full w-[1px] bg-[#ABB8BD]" />
@@ -36,11 +38,15 @@ export const HomeTabs = () => {
           <MediaLibraryIcon width={24} height={24} />
         </TouchableOpacity>
         <View className="h-full w-[1px] bg-[#ABB8BD]" />
-        <TouchableOpacity className="flex-1 items-center justify-center">
+        <TouchableOpacity
+          className="flex-1 items-center justify-center"
+          onPress={() => navigation.navigate('History')}>
           <HistoryIcon width={24} height={24} />
         </TouchableOpacity>
         <View className="h-full w-[1px] bg-[#ABB8BD]" />
-        <TouchableOpacity className="flex-1 items-center justify-center">
+        <TouchableOpacity
+          className="flex-1 items-center justify-center"
+          onPress={() => navigation.navigate('Account')}>
           <AccountIcon width={24} height={24} />
         </TouchableOpacity>
       </View>

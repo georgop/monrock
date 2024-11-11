@@ -1,4 +1,3 @@
-// Drawer.tsx
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AboutIcon } from 'assets/svg/AboutIcon';
@@ -59,13 +58,19 @@ export const Drawer: React.FC<DrawerProps> = ({ animation, isOpen, toggleDrawer 
           <View className="flex h-[70%] w-full justify-around px-[50px] py-8">
             <TouchableOpacity
               className="flex flex-row items-center gap-3"
-              onPress={() => navigation.navigate('Home')}>
+              onPress={() => {
+                navigation.navigate('Home');
+              }}>
               <MapIcon />
               <Text className="text-[20px] font-semibold text-[#005AD0]">Map</Text>
             </TouchableOpacity>
             <TouchableOpacity className="flex flex-row items-center gap-3">
               <ScheduledIcon width={16} height={16} />
-              <Text className="text-[20px] font-semibold text-[#005AD0]">Scheduled playbacks</Text>
+              <Text
+                className="text-[20px] font-semibold text-[#005AD0]"
+                onPress={() => navigation.navigate('Scheduled')}>
+                Scheduled playbacks
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity className="flex flex-row items-center gap-3">
               <FavouritesIcon />
@@ -73,15 +78,21 @@ export const Drawer: React.FC<DrawerProps> = ({ animation, isOpen, toggleDrawer 
             </TouchableOpacity>
             <TouchableOpacity
               className="flex flex-row items-center gap-3"
-              onPress={() => navigation.navigate('MediaLibrary')}>
+              onPress={() => {
+                navigation.navigate('MediaLibrary');
+              }}>
               <MediaLibraryIcon width={16} height={16} />
               <Text className="text-[20px] font-semibold text-[#005AD0]">Media Library</Text>
             </TouchableOpacity>
-            <TouchableOpacity className="flex flex-row items-center gap-3">
+            <TouchableOpacity
+              className="flex flex-row items-center gap-3"
+              onPress={() => navigation.navigate('History')}>
               <HistoryIcon width={16} height={16} />
               <Text className="max-h-[43px] text-[20px] font-semibold text-[#005AD0]">History</Text>
             </TouchableOpacity>
-            <TouchableOpacity className="flex flex-row items-center gap-3">
+            <TouchableOpacity
+              className="flex flex-row items-center gap-3"
+              onPress={() => navigation.navigate('Account')}>
               <AccountIcon width={16} height={16} />
               <Text className="text-[20px] font-semibold text-[#005AD0]">Account</Text>
             </TouchableOpacity>

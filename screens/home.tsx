@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Animated, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { HomeTabs } from 'components/Home/HomeTabs';
@@ -12,11 +12,7 @@ import { AdvertisingSpot } from 'mocks/types';
 export const Home = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [animation] = useState(new Animated.Value(0));
-
-  const athensCenter = {
-    latitude: 37.9838,
-    longitude: 23.7275,
-  };
+  const mapRef = useRef<MapView>(null);
 
   const toggleDrawer = () => {
     const toValue = drawerOpen ? 0 : 1;
@@ -39,10 +35,28 @@ export const Home = () => {
   };
 
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  const [location, setLocation] = useState({
+    latitude: 37.9838,
+    longitude: 23.7275,
+  });
+
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.animateToRegion(
+        {
+          ...location,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        },
+        1000
+      );
+    }
+  }, [location]);
 
   return (
     <View className="flex-1">
       <MapView
+        ref={mapRef}
         style={{ flex: 1 }}
         customMapStyle={[
           {
@@ -55,7 +69,7 @@ export const Home = () => {
           },
         ]}
         initialRegion={{
-          ...athensCenter,
+          ...location,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}>
@@ -96,12 +110,15 @@ export const Home = () => {
           marker={selectedMarker}
         />
       )}
-      <Drawer animation={animation} isOpen={drawerOpen} toggleDrawer={toggleDrawer} />
+      {drawerOpen && (
+        <Drawer animation={animation} isOpen={drawerOpen} toggleDrawer={toggleDrawer} />
+      )}
       <View className="absolute left-3 right-3 top-14 z-10">
         <SearchBar
           toggleDrawer={toggleDrawer}
           selectedFilters={selectedFilters}
           setSelectedFilters={setSelectedFilters}
+          setLocation={setLocation}
         />
       </View>
       <View className="absolute bottom-14 left-5 right-5 z-10">

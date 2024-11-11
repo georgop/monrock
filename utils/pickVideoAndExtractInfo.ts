@@ -3,10 +3,13 @@ import * as MediaLibrary from 'expo-media-library';
 import * as VideoThumbnails from 'expo-video-thumbnails';
 import * as FileSystem from 'expo-file-system';
 import { Audio } from 'expo-av';
+import uuid from 'react-native-uuid';
 
 
 export type VideoInfo = {
+  id:string;
   dateAdded: string;
+  fileName: string;
   thumbnailUri: string;
   duration: number; // in seconds
   size: number; // in bytes
@@ -14,6 +17,8 @@ export type VideoInfo = {
     width: number;
     height: number;
   };
+  uri:string;
+  isApproved:boolean;
 };
 
 export async function pickVideoAndExtractInfo(): Promise<VideoInfo | null> {
@@ -53,13 +58,20 @@ export async function pickVideoAndExtractInfo(): Promise<VideoInfo | null> {
 
   const formattedDate = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()} at ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
 
+  const fileName = videoUri.split('/').pop() || 'Unknown';
+
+  const id = uuid.v4().toString();
 
   return {
+    id,
+    fileName,
     dateAdded: formattedDate,
     thumbnailUri,
     duration,
     size,
     resolution: { width, height },
+    uri:videoUri,
+    isApproved:Math.random() > 0.5
   };
 }
 
