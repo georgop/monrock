@@ -21,10 +21,15 @@ export const MonitorsCarousel: React.FC<MonitorsCarouselProps> = ({
   const height = Dimensions.get('window').height;
 
   const items = advertisingSpots.find((spot) => spot.id === advertisingSpotId)?.monitors;
+  const advertisingSpotName = advertisingSpots.find((spot) => spot.id === advertisingSpotId)?.name;
+  const address = advertisingSpots.find((spot) => spot.id === advertisingSpotId)?.address;
 
   const handleBookMonitor = async (monitor: Monitor) => {
     try {
-      await AsyncStorage.setItem('selectedMonitor', JSON.stringify(monitor));
+      await AsyncStorage.setItem(
+        'selectedMonitor',
+        JSON.stringify({ advertisingSpotName, address, monitor })
+      );
       setCurrentState('create-video-playlist');
     } catch (error) {
       console.error('Failed to save monitor to AsyncStorage:', error);

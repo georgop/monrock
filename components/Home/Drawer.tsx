@@ -46,13 +46,13 @@ export const Drawer: React.FC<DrawerProps> = ({ drawerOpen, setDrawerOpen }) => 
     setDrawerOpen(!drawerOpen);
   };
 
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener('focus', () => {
-  //     setDrawerOpen(false);
-  //     animation.setValue(0);
-  //   });
-  //   return unsubscribe;
-  // }, [navigation, animation]);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      setDrawerOpen(false);
+      animation.setValue(0);
+    });
+    return unsubscribe;
+  }, [navigation, animation]);
 
   return (
     <>

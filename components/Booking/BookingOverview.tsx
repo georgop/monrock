@@ -22,7 +22,11 @@ type TabsProps = StackNavigationProp<RootStackParamList>;
 
 export const BookingOverview: React.FC<BookingOverviewProps> = ({ setCurrentState }) => {
   const [selectedVideos, setSelectedVideos] = useState<VideoInfo[]>([]);
-  const [selectedMonitor, setSelectedMonitor] = useState<Monitor>();
+  const [selectedMonitor, setSelectedMonitor] = useState<{
+    monitor: Monitor;
+    advertisingSpotName: string;
+    address: string;
+  }>();
   const navigation = useNavigation<TabsProps>();
 
   useEffect(() => {
@@ -74,23 +78,24 @@ export const BookingOverview: React.FC<BookingOverviewProps> = ({ setCurrentStat
             Monitor selection
           </Text>
           <TouchableOpacity
-            key={selectedMonitor.id}
+            key={selectedMonitor.monitor.id}
             className="mt-6 flex w-full flex-row items-center justify-between px-6">
             <View>
               <Image
-                source={{ uri: selectedMonitor.image }}
+                source={{ uri: selectedMonitor.monitor.image }}
                 className="h-[88px] w-[88px] rounded-[24px]"
               />
             </View>
             <View className="ml-4 flex-1 justify-center">
               <Text className="text-lg font-semibold" numberOfLines={1}>
-                {selectedMonitor.name}
+                {selectedMonitor.monitor.name}
               </Text>
-              <Text className="text-sm font-semibold">{selectedMonitor.specs.join(' ')}</Text>
+              <Text className="text-sm font-semibold">{selectedMonitor.advertisingSpotName}</Text>
+              <Text className="text-sm font-semibold">{selectedMonitor.address}</Text>
             </View>
           </TouchableOpacity>
         </View>
-        <View>
+        <View className="mt-4">
           <Text className="text-center text-[18px] font-semibold text-[#02326F]">
             Video playlist
           </Text>

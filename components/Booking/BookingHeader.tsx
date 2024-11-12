@@ -2,11 +2,12 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ExitIcon } from 'assets/svg/ExitIcon';
 import { GoBackIcon } from 'assets/svg/GoBackIcon';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from 'navigation';
 import { useEffect, useState } from 'react';
 import { Text, View, TouchableOpacity } from 'react-native';
 
-export type HeaderProps = {
+export type BookingHeaderProps = {
   currentState: 'select-monitor' | 'create-video-playlist' | 'set-playback-date' | 'complete-order';
   setCurrentState: (
     value: 'select-monitor' | 'create-video-playlist' | 'set-playback-date' | 'complete-order'
@@ -15,7 +16,10 @@ export type HeaderProps = {
 
 type HeaderRouteProps = StackNavigationProp<RootStackParamList, 'Home'>;
 
-export const Header: React.FC<HeaderProps> = ({ currentState, setCurrentState }) => {
+const VIDEO_STORAGE_KEY = 'selectedVideos';
+const MONITOR_STORAGE_KEY = 'selectedMonitor';
+
+export const BookingHeader: React.FC<BookingHeaderProps> = ({ currentState, setCurrentState }) => {
   const [headerTitle, setHeaderTitle] = useState<string>('Available monitors');
 
   useEffect(() => {
@@ -32,7 +36,6 @@ export const Header: React.FC<HeaderProps> = ({ currentState, setCurrentState })
 
   const navigation = useNavigation<HeaderRouteProps>();
 
-  // Define the flow of states
   const stateOrder = [
     'select-monitor',
     'create-video-playlist',
@@ -49,13 +52,18 @@ export const Header: React.FC<HeaderProps> = ({ currentState, setCurrentState })
     }
   };
 
+  const handleExit = async () => {
+    await AsyncStorage.multiRemove([VIDEO_STORAGE_KEY, MONITOR_STORAGE_KEY]);
+    navigation.navigate('Home');
+  };
+
   return (
     <View className="flex h-[64px] w-full flex-row items-center justify-between bg-white px-4">
       <TouchableOpacity className="flex w-20 items-start" onPress={handleGoBack}>
         <GoBackIcon />
       </TouchableOpacity>
       <Text className="text-[22px] font-semibold">{headerTitle}</Text>
-      <TouchableOpacity className="flex w-20 items-end" onPress={() => navigation.navigate('Home')}>
+      <TouchableOpacity className="flex w-20 items-end" onPress={handleExit}>
         <ExitIcon />
       </TouchableOpacity>
     </View>

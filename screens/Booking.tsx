@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
-import { Header } from 'components/Header';
+import { BookingHeader } from 'components/Booking/BookingHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MonitorsCarousel } from 'components/Booking/MonitorsCarousel';
 import { useState } from 'react';
@@ -22,7 +22,7 @@ export const Booking = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <Header setCurrentState={setCurrentState} currentState={currentState} />
+      <BookingHeader setCurrentState={setCurrentState} currentState={currentState} />
       {currentState === 'select-monitor' && (
         <View style={{ flex: 1, justifyContent: 'center' }}>
           <MonitorsCarousel
