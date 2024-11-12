@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
+import { useFocusEffect } from '@react-navigation/native';
 import { HomeTabs } from 'components/Home/HomeTabs';
 import { SearchBar } from 'components/Home/SearchBar';
 import { Drawer } from 'components/Home/Drawer';
@@ -11,18 +12,10 @@ import { AdvertisingSpot } from 'mocks/types';
 
 export const Home = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [animation] = useState(new Animated.Value(0));
   const mapRef = useRef<MapView>(null);
+  const [animation] = useState(new Animated.Value(0));
 
   const toggleDrawer = () => {
-    const toValue = drawerOpen ? 0 : 1;
-
-    Animated.timing(animation, {
-      toValue,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-
     setDrawerOpen(!drawerOpen);
   };
 
@@ -52,6 +45,12 @@ export const Home = () => {
       );
     }
   }, [location]);
+
+  useFocusEffect(
+    useCallback(() => {
+      setDrawerOpen(false); // Reset drawerOpen state on focus
+    }, [])
+  );
 
   return (
     <View className="flex-1">
@@ -110,9 +109,7 @@ export const Home = () => {
           marker={selectedMarker}
         />
       )}
-      {drawerOpen && (
-        <Drawer animation={animation} isOpen={drawerOpen} toggleDrawer={toggleDrawer} />
-      )}
+      <Drawer drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
       <View className="absolute left-3 right-3 top-14 z-10">
         <SearchBar
           toggleDrawer={toggleDrawer}
