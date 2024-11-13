@@ -65,7 +65,25 @@ export const BookingOverview: React.FC<BookingOverviewProps> = ({ setCurrentStat
   );
 
   const handleCompleteBooking = async () => {
-    navigation.navigate('Scheduled');
+    try {
+      const existingPlaybacks = await AsyncStorage.getItem('scheduledPlaybacks');
+      const scheduledPlaybacks = existingPlaybacks ? JSON.parse(existingPlaybacks) : [];
+
+      const newPlayback = {
+        selectedVideos,
+        selectedMonitor,
+        price: 0,
+        date: new Date().toISOString(),
+      };
+
+      scheduledPlaybacks.push(newPlayback);
+
+      await AsyncStorage.setItem('scheduledPlaybacks', JSON.stringify(scheduledPlaybacks));
+      await AsyncStorage.multiRemove([VIDEO_STORAGE_KEY, MONITOR_STORAGE_KEY]);
+      navigation.navigate('Scheduled');
+    } catch (error) {
+      console.error('Failed to save playback to AsyncStorage', error);
+    }
   };
 
   if (!selectedMonitor || selectedVideos.length === 0) return null;

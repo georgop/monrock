@@ -29,3 +29,15 @@ export type AdvertisingSpot = {
     images: string[];
     monitors: Monitor[];
 }
+
+
+export type Playback = {
+    selectedVideos: Array<{ id: string; fileName: string; thumbnailUri: string; duration: number }>;
+    selectedMonitor: {
+      monitor: { id: string; name: string; image: string };
+      advertisingSpotName: string;
+      address: string;
+    };
+    price: number;
+    date: string;
+  };
