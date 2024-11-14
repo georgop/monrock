@@ -9,6 +9,10 @@ import { ScheduledCard } from 'components/Scheduled/ScheduledCard';
 export const Scheduled = () => {
   const [scheduledPlaybacks, setScheduledPlaybacks] = useState<Playback[]>([]);
 
+  // useEffect(() => {
+  //   AsyncStorage.clear();
+  // }, []);
+
   useEffect(() => {
     const loadScheduledPlaybacks = async () => {
       try {
@@ -24,6 +28,18 @@ export const Scheduled = () => {
     loadScheduledPlaybacks();
   }, []);
 
+  const deleteScheduledPlayback = async (id: string) => {
+    try {
+      const updatedPlaybacks = scheduledPlaybacks.filter((playback) => playback.id !== id);
+
+      await AsyncStorage.setItem('scheduledPlaybacks', JSON.stringify(updatedPlaybacks));
+
+      setScheduledPlaybacks(updatedPlaybacks);
+    } catch (error) {
+      console.error('Failed to delete playback from AsyncStorage', error);
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ImageBackground
@@ -38,7 +54,11 @@ export const Scheduled = () => {
         <ScreenHeader label="Scheduled playbacks" />
         <ScrollView className="flex-1 p-6">
           {scheduledPlaybacks.map((playback, index) => (
-            <ScheduledCard playBack={playback} key={index} />
+            <ScheduledCard
+              playback={playback}
+              key={index}
+              deleteScheduledPlayback={deleteScheduledPlayback}
+            />
           ))}
         </ScrollView>
       </ImageBackground>

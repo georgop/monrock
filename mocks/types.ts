@@ -1,3 +1,5 @@
+import { VideoInfo } from "utils/pickVideoAndExtractInfo";
+
 //Category can be 'Gas stations' or 'Clinics' or 'Cafes' or 'Restaurants' or 'Public spaces'
 export type Category = {
     id:number;
@@ -32,7 +34,8 @@ export type AdvertisingSpot = {
 
 
 export type Playback = {
-    selectedVideos: Array<{ id: string; fileName: string; thumbnailUri: string; duration: number }>;
+    id:string;
+    selectedVideos: VideoInfo[];
     selectedMonitor: {
       monitor: { id: string; name: string; image: string };
       advertisingSpotName: string;

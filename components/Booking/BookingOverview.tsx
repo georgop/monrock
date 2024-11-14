@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { Image, ImageBackground, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { calculateAdSpaces, formatDuration } from 'utils/format';
 import { VideoInfo } from 'utils/pickVideoAndExtractInfo';
+import uuid from 'react-native-uuid';
 
 export type BookingOverviewProps = {
   setCurrentState: (
@@ -68,8 +69,10 @@ export const BookingOverview: React.FC<BookingOverviewProps> = ({ setCurrentStat
     try {
       const existingPlaybacks = await AsyncStorage.getItem('scheduledPlaybacks');
       const scheduledPlaybacks = existingPlaybacks ? JSON.parse(existingPlaybacks) : [];
+      const id = uuid.v4().toString();
 
       const newPlayback = {
+        id,
         selectedVideos,
         selectedMonitor,
         price: 0,

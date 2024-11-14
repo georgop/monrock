@@ -4,11 +4,10 @@ import { Playback } from 'mocks/types';
 import { useState } from 'react';
 import { Modal, Text, TouchableOpacity, View } from 'react-native';
 import { calculateAdSpaces } from 'utils/format';
-import { ScheduledOverview } from './ScheduledOverview';
+import { HistoryOverview } from './HistoryOverview';
 
-export type ScheduledCardProps = {
+export type HistoryCardProps = {
   playback: Playback;
-  deleteScheduledPlayback: (id: string) => void;
 };
 
 const formatDate = (dateString: string) => {
@@ -20,10 +19,7 @@ const formatDate = (dateString: string) => {
   };
 };
 
-export const ScheduledCard: React.FC<ScheduledCardProps> = ({
-  playback,
-  deleteScheduledPlayback,
-}) => {
+export const HistoryCard: React.FC<HistoryCardProps> = ({ playback }) => {
   const { day, month, year } = formatDate(playback.date);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
@@ -34,13 +30,7 @@ export const ScheduledCard: React.FC<ScheduledCardProps> = ({
       {detailsModalOpen && (
         <Modal
           visible={detailsModalOpen}
-          children={
-            <ScheduledOverview
-              playback={playback}
-              onClose={() => setDetailsModalOpen(false)}
-              deleteScheduledPlayback={deleteScheduledPlayback}
-            />
-          }
+          children={<HistoryOverview onClose={() => setDetailsModalOpen(false)} />}
         />
       )}
       <View className="mb-4 flex flex-row items-start justify-between">
@@ -55,7 +45,7 @@ export const ScheduledCard: React.FC<ScheduledCardProps> = ({
 
       <View className="mb-4 flex flex-row items-center justify-between">
         <View>
-          <Text className="text-[12px] font-medium text-[#ABB8BD]">PLAYBACK DATE</Text>
+          <Text className="text-[12px] font-medium text-[#ABB8BD]">BOOKING DATE</Text>
           <View className="mt-2 flex flex-row items-center">
             <View>
               <Text className="text-[48px] font-semibold leading-[48px] text-[#02326F]">{day}</Text>
@@ -72,25 +62,15 @@ export const ScheduledCard: React.FC<ScheduledCardProps> = ({
         </View>
 
         <View className="flex flex-col items-end">
-          <Text className="text-[14px] font-medium text-[#1A1A1A]">
-            {playback.selectedVideos.length} videos
-          </Text>
-          <Text className="text-[14px] font-medium text-[#1A1A1A]">
-            {playback.selectedMonitor.monitor.name}
-          </Text>
+          <Text className="text-[14px] font-medium text-[#1A1A1A]">3 videos</Text>
+          <Text className="text-[14px] font-medium text-[#1A1A1A]">2 days of playback</Text>
         </View>
       </View>
 
       <View className="flex flex-row items-center justify-between border-t border-gray-200 pt-4">
         <View className="flex flex-row items-center gap-1">
           <DurationIcon />
-          <Text className="text-[14px] font-medium text-[#5B6876]">
-            {playback.selectedVideos.reduce(
-              (total, video) => total + calculateAdSpaces(video.duration),
-              0
-            )}{' '}
-            Ad spaces
-          </Text>
+          <Text className="text-[14px] font-medium text-[#5B6876]">10 Ad spaces</Text>
         </View>
         <Text className="text-[18px] font-semibold text-[#02326F]">
           € {playback.price.toFixed(2)}

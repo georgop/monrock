@@ -1,29 +1,54 @@
 import { ResizeMode, Video } from 'expo-av';
-import { Modal, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Modal, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons'; // You may need to install this package
 
 export type VideoPlayerProps = {
   videoUri: string;
+  isOpen: boolean;
+  setIsOpen: (value: boolean) => void;
 };
-export const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUri }) => {
+
+export const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUri, isOpen, setIsOpen }) => {
   return (
-    <Modal>
-      <Video
-        style={{
-          width: '100%',
-          height: '80%',
-        }}
-        source={{ uri: videoUri }}
-        useNativeControls
-        isLooping
-        shouldPlay
-        resizeMode={ResizeMode.CONTAIN}
-        onError={(e) => console.error('Video playback error', e)}
-      />
-      <TouchableOpacity
-        style={{ marginTop: 20, padding: 10, backgroundColor: 'white', borderRadius: 10 }}>
-        <Text style={{ color: '#02326F', fontWeight: 'bold' }}>Close Video</Text>
-      </TouchableOpacity>
+    <Modal visible={isOpen} animationType="slide" transparent>
+      <View style={styles.container}>
+        {/* Close Button */}
+        <TouchableOpacity style={styles.closeButton} onPress={() => setIsOpen(false)}>
+          <Ionicons name="close" size={36} color="white" />
+        </TouchableOpacity>
+
+        {/* Video Player */}
+        <Video
+          style={styles.video}
+          source={{ uri: videoUri }}
+          useNativeControls
+          isLooping
+          shouldPlay
+          resizeMode={ResizeMode.CONTAIN}
+          onError={(e) => console.error('Video playback error', e)}
+        />
+      </View>
     </Modal>
   );
 };
+
+// Styles
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.9)', // Dark background for better focus
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 60,
+    right: 20,
+    zIndex: 1,
+    padding: 10,
+  },
+  video: {
+    width: '90%',
+    height: '90%',
+  },
+});

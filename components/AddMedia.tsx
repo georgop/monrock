@@ -92,7 +92,7 @@ export const AddMedia: React.FC<AddMediaProps> = ({
                   bottom: 0,
                   backgroundColor: video.isApproved
                     ? 'rgba(0, 0, 0, 0.3)'
-                    : 'rgba(180,180,180,0.6)', // slightly transparent dark overlay
+                    : 'rgba(180,180,180,0.6)',
                   alignItems: 'center',
                   justifyContent: 'center',
                   borderRadius: 24,
