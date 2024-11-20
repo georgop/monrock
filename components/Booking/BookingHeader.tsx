@@ -49,21 +49,28 @@ export const BookingHeader: React.FC<BookingHeaderProps> = ({ currentState, setC
       setCurrentState(stateOrder[currentIndex - 1]);
     } else {
       navigation.goBack();
+      handleExit();
     }
   };
 
   const handleExit = async () => {
-    await AsyncStorage.multiRemove([VIDEO_STORAGE_KEY, MONITOR_STORAGE_KEY]);
+    await AsyncStorage.multiRemove([VIDEO_STORAGE_KEY, MONITOR_STORAGE_KEY, 'selectedDates']);
     navigation.navigate('Home');
   };
 
   return (
     <View className="flex h-[64px] w-full flex-row items-center justify-between bg-white px-4">
-      <TouchableOpacity className="flex w-20 items-start" onPress={handleGoBack}>
+      <TouchableOpacity
+        className="flex w-20 items-start"
+        onPress={handleGoBack}
+        hitSlop={{ top: 50, bottom: 50, left: 50, right: 50 }}>
         <GoBackIcon />
       </TouchableOpacity>
       <Text className="text-[22px] font-semibold">{headerTitle}</Text>
-      <TouchableOpacity className="flex w-20 items-end" onPress={handleExit}>
+      <TouchableOpacity
+        className="flex w-20 items-end"
+        onPress={handleExit}
+        hitSlop={{ top: 50, bottom: 50, left: 50, right: 50 }}>
         <ExitIcon />
       </TouchableOpacity>
     </View>

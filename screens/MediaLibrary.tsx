@@ -56,7 +56,7 @@ export const MediaLibrary = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white">
       <ScreenHeader label="Media library" />
       <View className="flex flex-1 items-center justify-center" onLayout={onLayout}>
         <VideosCarousel
@@ -77,6 +77,6 @@ export const MediaLibrary = () => {
           </Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };

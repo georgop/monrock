@@ -93,8 +93,8 @@ export const HistoryOverview: React.FC<HistoryOverviewProps> = ({ onClose }) => 
   ];
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <View className="flex h-[64px] w-full flex-row items-center">
+    <View className="flex-1 bg-white">
+      <View className="mt-8 flex h-[64px] w-full flex-row items-center">
         <TouchableOpacity onPress={() => onClose()} className="flex w-20 items-center">
           <GoBackIcon />
         </TouchableOpacity>
@@ -144,6 +144,6 @@ export const HistoryOverview: React.FC<HistoryOverviewProps> = ({ onClose }) => 
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };

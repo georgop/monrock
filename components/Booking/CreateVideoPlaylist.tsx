@@ -7,6 +7,7 @@ import { NotApprovedVideoIcon } from 'assets/svg/NotApprovedVideoIcon';
 import { PlayIcon } from 'assets/svg/PlayIcon';
 import { StepOneIcon } from 'assets/svg/StepOneIcon';
 import { AddMedia } from 'components/AddMedia';
+import { VideoPlayer } from 'components/VideoPlayer';
 import { useEffect, useState } from 'react';
 import { Image, View, Text, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { calculateAdSpaces, formatDuration } from 'utils/format';
@@ -56,6 +57,9 @@ export const CreateVideoPlaylist: React.FC<CreateVideoPlaylistProps> = ({ setCur
     saveSelectedVideos();
   }, [selectedVideos]);
 
+  const [showPlayer, setShowPlayer] = useState(false);
+  const [currentVideoUri, setCurrentVideoUri] = useState<string | null>(null);
+
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}>
       <View className="mt-8 flex flex-1 items-center">
@@ -70,10 +74,19 @@ export const CreateVideoPlaylist: React.FC<CreateVideoPlaylistProps> = ({ setCur
           </View>
         )}
         {selectedVideos.map((video) => (
-          <TouchableOpacity
-            key={video.id}
-            className="mt-6 flex flex-row items-center justify-between px-6">
-            <View>
+          <View key={video.id} className="mt-6 flex flex-row items-center justify-between px-6">
+            {showPlayer && currentVideoUri && (
+              <VideoPlayer
+                videoUri={currentVideoUri}
+                isOpen={showPlayer}
+                setIsOpen={setShowPlayer}
+              />
+            )}
+            <TouchableOpacity
+              onPress={() => {
+                setCurrentVideoUri(video.uri);
+                setShowPlayer(true);
+              }}>
               <Image
                 source={{ uri: video.thumbnailUri }}
                 className="h-[88px] w-[88px] rounded-[24px]"
@@ -92,7 +105,7 @@ export const CreateVideoPlaylist: React.FC<CreateVideoPlaylistProps> = ({ setCur
                 }}>
                 <PlayIcon />
               </View>
-            </View>
+            </TouchableOpacity>
             <View className="ml-4 flex-1 justify-center">
               <Text className="text-lg font-semibold" numberOfLines={1}>
                 {video.fileName}
@@ -118,7 +131,7 @@ export const CreateVideoPlaylist: React.FC<CreateVideoPlaylistProps> = ({ setCur
                 <DeleteVideoIcon />
               </TouchableOpacity>
             )}
-          </TouchableOpacity>
+          </View>
         ))}
         <TouchableOpacity
           className="mt-9 h-12 w-40 items-center justify-center rounded-full border border-[#005AD0] bg-[#005AD0]"
@@ -140,9 +153,11 @@ export const CreateVideoPlaylist: React.FC<CreateVideoPlaylistProps> = ({ setCur
           onPress={() => {
             setCurrentState('set-playback-date');
           }}
-          className="mt-[54px] flex w-[80px] flex-row items-center gap-2"
+          className="mt-[54px] flex flex-row items-center justify-center gap-2"
           disabled={selectedVideos.length === 0}>
-          <Text style={{ color: selectedVideos.length > 0 ? '#005AD0' : '#CBD4D9', flex: 1 }}>
+          <Text
+            className="font-semibold"
+            style={{ color: selectedVideos.length > 0 ? '#005AD0' : '#CBD4D9' }}>
             Next step
           </Text>
           <ArrowRightIcon color={selectedVideos.length > 0 ? '#005AD0' : '#CBD4D9'} />

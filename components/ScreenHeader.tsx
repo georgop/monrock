@@ -15,7 +15,7 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({ label }) => {
   };
   return (
     <>
-      <View className="flex h-[64px] w-full flex-row items-center">
+      <View className="mt-8 flex h-[64px] w-full flex-row items-center">
         <TouchableOpacity onPress={toggleDrawer} className="flex w-20 items-center">
           <HamburgerIcon />
         </TouchableOpacity>

@@ -1,5 +1,6 @@
 import { he } from '@faker-js/faker/.';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CalendarIcon } from 'assets/svg/CalendarIcon';
 import { advertisingSpots } from 'mocks/data';
 import { Monitor } from 'mocks/types';
 import * as React from 'react';
@@ -25,10 +26,13 @@ export const MonitorsCarousel: React.FC<MonitorsCarouselProps> = ({
   const address = advertisingSpots.find((spot) => spot.id === advertisingSpotId)?.address;
 
   const handleBookMonitor = async (monitor: Monitor) => {
+    const monitorSchedule = advertisingSpots
+      .find((spot) => spot.id === advertisingSpotId)
+      ?.monitors.find((m) => m.monitor.id === monitor.id)?.schedule;
     try {
       await AsyncStorage.setItem(
         'selectedMonitor',
-        JSON.stringify({ advertisingSpotName, address, monitor })
+        JSON.stringify({ advertisingSpotName, address, monitor, monitorSchedule })
       );
       setCurrentState('create-video-playlist');
     } catch (error) {
@@ -62,15 +66,15 @@ export const MonitorsCarousel: React.FC<MonitorsCarouselProps> = ({
               elevation: 20,
             }}>
             <Image
-              src={items[index].image}
+              src={items[index].monitor.image}
               style={{ width: '100%', height: 200, borderRadius: 24 }}
             />
             <View className="flex-1">
               <Text className="mt-8 text-center text-[22px] font-semibold text-[#02326F]">
-                {items[index].name}
+                {items[index].monitor.name}
               </Text>
               <View className="mt-4 flex flex-col items-center justify-center gap-2">
-                {items[index].specs.map((spec, index) => (
+                {items[index].monitor.specs.map((spec, index) => (
                   <Text key={index} className="w-full text-center text-[18px]">
                     {spec}
                   </Text>
@@ -81,17 +85,20 @@ export const MonitorsCarousel: React.FC<MonitorsCarouselProps> = ({
                   Max video ad space per day
                 </Text>
                 <Text className="text-[18px] font-semibold text-[#293037]">
-                  {items[index].maxVideoAdSpacePerDay}
+                  {items[index].monitor.maxVideoAdSpacePerDay}
                 </Text>
               </View>
               <View className="mt-4 flex flex-col items-center justify-center">
                 <Text className="text-[18px] font-normal text-[#293037]">Available days</Text>
-                <Text className="text-[18px] font-semibold text-[#293037]">Open calendar</Text>
+                <TouchableOpacity className="mt-1 flex flex-row items-center gap-2">
+                  <CalendarIcon color={'#005AD0'} width={16} height={16} />
+                  <Text className="text-[18px] font-semibold text-[#293037]">Open calendar</Text>
+                </TouchableOpacity>
               </View>
             </View>
             <TouchableOpacity
-              className="mb-4 w-[191px] self-center"
-              onPress={() => handleBookMonitor(items[index])}>
+              className="mb-4 self-center"
+              onPress={() => handleBookMonitor(items[index].monitor)}>
               <Text className="rounded-[9999px] border-[1px] border-[#005AD0] bg-[#005AD0] px-8 py-[16px] text-center text-[20px] font-semibold text-[#FFFFFF]">
                 Book monitor
               </Text>

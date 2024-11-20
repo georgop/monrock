@@ -24,8 +24,10 @@ export const ScheduledCard: React.FC<ScheduledCardProps> = ({
   playback,
   deleteScheduledPlayback,
 }) => {
-  const { day, month, year } = formatDate(playback.date);
+  const { day, month, year } = formatDate(Object.keys(playback.dates)[0]);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+
+  if (!playback.selectedMonitor) return null;
 
   return (
     <TouchableOpacity
@@ -34,6 +36,7 @@ export const ScheduledCard: React.FC<ScheduledCardProps> = ({
       {detailsModalOpen && (
         <Modal
           visible={detailsModalOpen}
+          statusBarTranslucent={true}
           children={
             <ScheduledOverview
               playback={playback}
@@ -93,7 +96,7 @@ export const ScheduledCard: React.FC<ScheduledCardProps> = ({
           </Text>
         </View>
         <Text className="text-[18px] font-semibold text-[#02326F]">
-          € {playback.price.toFixed(2)}
+          € {playback.totalCost.toFixed(2)}
         </Text>
       </View>
     </TouchableOpacity>

@@ -6,12 +6,18 @@ export type Category = {
     name:string;
 }
 
+export type MonitorSchedule = {
+    date:string;
+    bookedAdSpaces:number;
+}[]
+
 export type Monitor = {
     id:number;
     name:string;
     specs:string[];
     maxVideoAdSpacePerDay:string;
     image:string;
+    totalAdSpaces:number;
 }
 
 export type AdvertisingSpot = {
@@ -29,18 +35,21 @@ export type AdvertisingSpot = {
     targetAudience: string;
     workingHours: string;
     images: string[];
-    monitors: Monitor[];
+    monitors: {monitor:Monitor, schedule:MonitorSchedule}[];
 }
 
 
 export type Playback = {
-    id:string;
+    id: string;
     selectedVideos: VideoInfo[];
     selectedMonitor: {
-      monitor: { id: string; name: string; image: string };
-      advertisingSpotName: string;
-      address: string;
-    };
-    price: number;
-    date: string;
+        monitor: Monitor;
+        advertisingSpotName: string;
+        address: string;
+    } | undefined;
+    totalAdSpace: number;
+    totalCost: number;
+    dates: Record<string, {price:number}>;
   };
+
+  

@@ -10,14 +10,12 @@ export type VideoPlayerProps = {
 
 export const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUri, isOpen, setIsOpen }) => {
   return (
-    <Modal visible={isOpen} animationType="slide" transparent>
+    <Modal visible={isOpen} animationType="slide" transparent statusBarTranslucent={true}>
       <View style={styles.container}>
-        {/* Close Button */}
         <TouchableOpacity style={styles.closeButton} onPress={() => setIsOpen(false)}>
           <Ionicons name="close" size={36} color="white" />
         </TouchableOpacity>
 
-        {/* Video Player */}
         <Video
           style={styles.video}
           source={{ uri: videoUri }}
@@ -42,7 +40,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    top: 60,
+    top: 80,
     right: 20,
     zIndex: 1,
     padding: 10,

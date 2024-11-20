@@ -20,7 +20,7 @@ const formatDate = (dateString: string) => {
 };
 
 export const HistoryCard: React.FC<HistoryCardProps> = ({ playback }) => {
-  const { day, month, year } = formatDate(playback.date);
+  const { day, month, year } = formatDate(Object.keys(playback.dates)[0]);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
   return (
@@ -29,6 +29,7 @@ export const HistoryCard: React.FC<HistoryCardProps> = ({ playback }) => {
       onPress={() => setDetailsModalOpen(true)}>
       {detailsModalOpen && (
         <Modal
+          statusBarTranslucent={true}
           visible={detailsModalOpen}
           children={<HistoryOverview onClose={() => setDetailsModalOpen(false)} />}
         />
@@ -36,9 +37,7 @@ export const HistoryCard: React.FC<HistoryCardProps> = ({ playback }) => {
       <View className="mb-4 flex flex-row items-start justify-between">
         <View className="flex flex-col">
           <Text className="text-[18px] font-semibold text-[#02326F]">Advertising spot</Text>
-          <Text className="text-[12px] font-medium text-[#5B6876]">
-            {playback.selectedMonitor.address}, {playback.selectedMonitor.advertisingSpotName}
-          </Text>
+          <Text className="text-[12px] font-medium text-[#5B6876]">Address</Text>
         </View>
         <ChevronRightIcon />
       </View>
@@ -73,7 +72,7 @@ export const HistoryCard: React.FC<HistoryCardProps> = ({ playback }) => {
           <Text className="text-[14px] font-medium text-[#5B6876]">10 Ad spaces</Text>
         </View>
         <Text className="text-[18px] font-semibold text-[#02326F]">
-          € {playback.price.toFixed(2)}
+          € {playback.totalCost.toFixed(2)}
         </Text>
       </View>
     </TouchableOpacity>

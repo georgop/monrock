@@ -3,12 +3,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Login from '../screens/Login';
 import { useAuth } from '../context/AuthContext';
-import { Home } from 'screens/Home';
+import { Map } from 'screens/Map';
 import { Booking } from 'screens/Booking';
 import { MediaLibrary } from 'screens/MediaLibrary';
 import { History } from 'screens/History';
 import { Scheduled } from 'screens/Scheduled';
 import { Account } from 'screens/Account';
+import { StatusBar } from 'expo-status-bar';
 
 export type RootStackParamList = {
   DrawerNavigator: undefined;
@@ -36,7 +37,7 @@ export default function RootStack() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {isLoggedIn ? (
           <>
-            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Home" component={Map} />
             <Stack.Screen name="Booking" component={Booking} />
             <Stack.Screen name="MediaLibrary" component={MediaLibrary} />
             <Stack.Screen name="History" component={History} />

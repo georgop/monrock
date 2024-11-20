@@ -13,6 +13,7 @@ import { TargetAudienceIcon } from 'assets/svg/TargetAudienceIcon';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from 'navigation';
+import { EyeIcon } from 'assets/svg/EyeIcon';
 
 interface MarkerModalProps {
   visible: boolean;
@@ -33,14 +34,16 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({ visible, onClose, mark
         <View className="flex-1 bg-gray-200 opacity-60" />
       </TouchableWithoutFeedback>
 
-      <View className="border-tl-[20px] border-tr-[20px] h-[60%] bg-white p-4">
-        <View className="flex w-[100%] flex-col">
+      <View className="rounded-tl-[36px] rounded-tr-[36px] bg-white px-6 pb-6 pt-[33px]">
+        <View className="flex flex-col px-6">
           <View className="flex flex-row items-center justify-between">
             <TouchableOpacity>
               <FavoriteIcon />
             </TouchableOpacity>
             <Text className="text-[20px] font-bold">{marker.name}</Text>
-            <TouchableOpacity onPress={onClose}>
+            <TouchableOpacity
+              onPress={onClose}
+              hitSlop={{ top: 50, bottom: 50, left: 50, right: 50 }}>
               <ExitIcon />
             </TouchableOpacity>
           </View>
@@ -62,58 +65,65 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({ visible, onClose, mark
             ))}
           </ScrollView>
         </View>
-        <View className="flex flex-1 justify-center gap-1 px-6">
+        <View className="m-6 flex justify-around gap-4">
           <View className="flex flex-row items-center justify-between">
             <View className="flex flex-row items-center gap-3">
               <CategoryIcon />
-              <Text className="text-[16px] font-normal text-[#293037]">Category</Text>
+              <Text className="text-[14px] font-normal text-[#293037]">Category</Text>
             </View>
-            <Text className="text-[16px] font-semibold text-[#293037]">{marker.category.name}</Text>
+            <Text className="mr-6 text-[14px] font-semibold text-[#293037]">
+              {marker.category.name}
+            </Text>
           </View>
           <View className="flex flex-row items-center justify-between">
             <View className="flex flex-row items-center gap-3">
               <WorkingHoursIcon />
-              <Text className="text-[16px] font-normal text-[#293037]">Working hours</Text>
+              <Text className="text-[14px] font-normal text-[#293037]">Working hours</Text>
             </View>
-            <Text className="text-[16px] font-semibold text-[#293037]">View schedule</Text>
+            <TouchableOpacity className="flex flex-row items-center gap-[6px]">
+              <Text className="text-[14px] font-semibold text-[#293037]">View schedule</Text>
+              <EyeIcon color={'#005AD0'} />
+            </TouchableOpacity>
           </View>
           <View className="flex flex-row items-center justify-between">
             <View className="flex flex-row items-center gap-3">
               <AvailableMonitorsIcon />
-              <Text className="text-[16px] font-normal text-[#293037]">Available monitors</Text>
+              <Text className="text-[14px] font-normal text-[#293037]">Available monitors</Text>
             </View>
-            <Text className="text-[16px] font-semibold text-[#293037]">
+            <Text className="mr-6 text-[14px] font-semibold text-[#293037]">
               {marker.availableMonitors} out of {marker.totalMonitors}
             </Text>
           </View>
           <View className="flex flex-row items-center justify-between">
             <View className="flex flex-row items-center gap-3">
               <AdvertisingDaysIcon />
-              <Text className="text-[16px] font-normal text-[#293037]">Advertisting days</Text>
+              <Text className="text-[14px] font-normal text-[#293037]">Advertisting days</Text>
             </View>
-            <Text className="text-[16px] font-semibold text-[#293037]">
+            <Text className="mr-6 text-[14px] font-semibold text-[#293037]">
               {marker.advertistingDays}
             </Text>
           </View>
           <View className="flex flex-row items-center justify-between">
             <View className="flex flex-row items-center gap-3">
               <ViewPerDayIcon />
-              <Text className="text-[16px] font-normal text-[#293037]">Views per day</Text>
+              <Text className="text-[14px] font-normal text-[#293037]">Views per day</Text>
             </View>
-            <Text className="text-[16px] font-semibold text-[#293037]">{marker.viewsPerDay}</Text>
+            <Text className="mr-6 text-[14px] font-semibold text-[#293037]">
+              {marker.viewsPerDay}
+            </Text>
           </View>
           <View className="flex flex-row items-center justify-between">
             <View className="flex flex-row items-center gap-3">
               <TargetAudienceIcon />
-              <Text className="text-[16px] font-normal text-[#293037]">Target audience</Text>
+              <Text className="text-[14px] font-normal text-[#293037]">Target audience</Text>
             </View>
-            <Text className="text-[16px] font-semibold text-[#293037]">
+            <Text className="mr-6 text-[14px] font-semibold text-[#293037]">
               {marker.targetAudience}
             </Text>
           </View>
         </View>
         <TouchableOpacity
-          className="w-[191px] self-center"
+          className="self-center"
           onPress={() => {
             onClose();
             navigation.navigate('Booking', { advertisingSpotId: marker.id });

@@ -22,6 +22,12 @@ import { CheckedCheckbox } from 'assets/svg/CheckedCheckbox';
 import { calculateAdSpaces, formatDuration } from 'utils/format';
 import { PlayIcon } from 'assets/svg/PlayIcon';
 import { NotApprovedVideoIcon } from 'assets/svg/NotApprovedVideoIcon';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from 'navigation';
+import { useNavigation } from '@react-navigation/native';
+import { VideoPlayer } from './VideoPlayer';
+
+type TabsProps = StackNavigationProp<RootStackParamList>;
 
 export type AddMediaProps = {
   isOpen: boolean;
@@ -62,6 +68,10 @@ export const AddMedia: React.FC<AddMediaProps> = ({
     }
   };
 
+  const navigation = useNavigation<TabsProps>();
+  const [showPlayer, setShowPlayer] = useState(false);
+  const [currentVideoUri, setCurrentVideoUri] = useState<string | null>(null);
+
   return (
     <Modal visible={isOpen} animationType="slide" onRequestClose={() => setIsOpen(false)}>
       <View className="z-[100] flex h-[64px] flex-row items-center justify-between">
@@ -71,14 +81,36 @@ export const AddMedia: React.FC<AddMediaProps> = ({
         <Text className="text-[22px] font-semibold">Select media</Text>
         <View className="w-20" />
       </View>
+      {showPlayer && currentVideoUri && (
+        <VideoPlayer videoUri={currentVideoUri} isOpen={showPlayer} setIsOpen={setShowPlayer} />
+      )}
       <ScrollView className="flex-1 px-6 pb-6">
+        {videos.length === 0 && (
+          <View className="flex h-[90vh] items-center justify-center">
+            <Text className="text-center text-[28px] font-semibold">No videos found.</Text>
+            <TouchableOpacity>
+              <Text
+                className="mt-4 text-center text-[20px] font-semibold text-[#005AD0]"
+                onPress={() => {
+                  setIsOpen(false);
+                  navigation.navigate('MediaLibrary');
+                }}>
+                Go to media library
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
         {videos.map((video, index) => (
           <TouchableOpacity
             key={index}
             className="mt-6 flex flex-row items-center justify-between"
             disabled={!video.isApproved}
             onPress={handleSelectVideo(video)}>
-            <View>
+            <TouchableOpacity
+              onPress={() => {
+                setCurrentVideoUri(video.uri);
+                setShowPlayer(true);
+              }}>
               <Image
                 source={{ uri: video.thumbnailUri }}
                 className="h-[88px] w-[88px] rounded-[24px]"
@@ -99,7 +131,7 @@ export const AddMedia: React.FC<AddMediaProps> = ({
                 }}>
                 {video.isApproved ? <PlayIcon /> : <NotApprovedVideoIcon />}
               </View>
-            </View>
+            </TouchableOpacity>
             <View className="ml-4 flex-1 justify-center">
               <Text
                 className="text-lg font-semibold"
@@ -125,17 +157,26 @@ export const AddMedia: React.FC<AddMediaProps> = ({
               </Text>
             </View>
             {video.isApproved && (
-              <TouchableOpacity className="flex-shrink-0">
+              <View className="flex-shrink-0">
                 {selectedVideos.find((v) => v.id === video.id) ? (
                   <CheckedCheckbox />
                 ) : (
                   <EmptyCheckbox />
                 )}
-              </TouchableOpacity>
+              </View>
             )}
           </TouchableOpacity>
         ))}
       </ScrollView>
+      <TouchableOpacity
+        className="mb-8 mt-9 h-12 w-40 items-center justify-center self-center rounded-full border border-[#005AD0] bg-[#005AD0]"
+        onPress={() => {
+          setIsOpen(false);
+        }}>
+        <View className="flex flex-row items-center gap-2">
+          <Text className="text-lg font-semibold text-white">Done</Text>
+        </View>
+      </TouchableOpacity>
     </Modal>
   );
 };

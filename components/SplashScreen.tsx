@@ -1,27 +1,19 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, View, Image } from 'react-native';
+import { Animated, View, Image, Easing } from 'react-native';
 import { Logo } from 'assets/Logo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SplashScreenText } from 'assets/svg/SplashScreenText';
 
 export const SplashScreen = () => {
-  const translateY = useRef(new Animated.Value(0)).current;
+  const translateY = useRef(new Animated.Value(-300)).current;
 
   useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(translateY, {
-          toValue: 45,
-          duration: 1500,
-          useNativeDriver: true,
-        }),
-        Animated.timing(translateY, {
-          toValue: 0,
-          duration: 1500,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
+    Animated.timing(translateY, {
+      toValue: 40,
+      duration: 800,
+      easing: Easing.inOut(Easing.ease),
+      useNativeDriver: true,
+    }).start();
   }, [translateY]);
 
   return (

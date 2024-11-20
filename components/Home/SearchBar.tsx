@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import { TouchableOpacity, View, TextInput, Text, ScrollView, Dimensions } from 'react-native';
+import { TouchableOpacity, View, Text, Modal, StyleSheet } from 'react-native';
 import { CalendarIcon } from 'assets/svg/CalendarIcon';
 import { FiltersIcon } from 'assets/svg/FiltersIcon';
 import { HamburgerIcon } from 'assets/svg/HamburgerIcon';
-import { SearchIcon } from 'assets/svg/SearchIcon';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import { de } from '@faker-js/faker/.';
+import { Calendar } from 'react-native-calendars';
+import dayjs from 'dayjs';
+import 'dayjs/locale/en';
 
 export type SearchBarProps = {
   toggleDrawer: () => void;
   selectedFilters: string[];
   setSelectedFilters: (filters: string[]) => void;
   setLocation: (location: { latitude: number; longitude: number }) => void;
+  setCalendarOpen: (value: boolean) => void;
 };
 
 export const SearchBar: React.FC<SearchBarProps> = ({
@@ -19,8 +21,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   selectedFilters,
   setSelectedFilters,
   setLocation,
+  setCalendarOpen,
 }) => {
   const [filtersVisible, setFiltersVisible] = useState(false);
+  const [calendarVisible, setCalendarVisible] = useState(false);
+  const [selectedDates, setSelectedDates] = useState<{ [date: string]: { selected: boolean } }>({});
 
   const toggleFilter = (filter: string) => {
     if (selectedFilters.includes(filter)) {
@@ -30,7 +35,49 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     }
   };
 
-  const [calendarVisible, setCalendarVisible] = useState(false);
+  const handleDateSelect = (day: string) => {
+    setSelectedDates((prevDates: any) => ({
+      ...prevDates,
+      [day]: prevDates[day]
+        ? undefined
+        : {
+            selected: true,
+            selectedColor: '#005AD0',
+            selectedTextColor: '#FFFFFF',
+          },
+    }));
+  };
+
+  // Group dates by month and sort days in each month
+  const groupDatesByMonth = () => {
+    const groupedDates: { [monthYear: string]: string[] } = {};
+
+    Object.keys(selectedDates)
+      .filter((date) => selectedDates[date]?.selected)
+      .forEach((date) => {
+        const monthYear = dayjs(date).format('MMM YYYY');
+        if (!groupedDates[monthYear]) {
+          groupedDates[monthYear] = [];
+        }
+        groupedDates[monthYear].push(dayjs(date).format('DD'));
+      });
+
+    Object.keys(groupedDates).forEach((monthYear) => {
+      groupedDates[monthYear].sort((a, b) => parseInt(a) - parseInt(b));
+    });
+
+    return groupedDates;
+  };
+
+  const formatGroupedDates = () => {
+    const groupedDates = groupDatesByMonth();
+    return Object.entries(groupedDates)
+      .map(([monthYear, days]) => {
+        const formattedDays = days.join(', ');
+        return `${formattedDays} ${monthYear}`;
+      })
+      .join(', ');
+  };
 
   return (
     <>
@@ -43,11 +90,13 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           shadowRadius: 12,
           elevation: 4,
         }}>
-        <TouchableOpacity onPress={toggleDrawer} className="absolute left-6">
+        <TouchableOpacity
+          onPress={toggleDrawer}
+          className="absolute left-6"
+          hitSlop={{ top: 50, bottom: 50, left: 50, right: 50 }}>
           <HamburgerIcon />
         </TouchableOpacity>
         <View className="flex w-[100%] flex-row items-center gap-2">
-          {/* <SearchIcon /> */}
           <GooglePlacesAutocomplete
             placeholder="Search map"
             query={{
@@ -86,7 +135,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                 height: '100%',
                 textAlign: 'center',
               },
-
               description: {
                 flex: 1,
                 fontSize: 16,
@@ -101,51 +149,24 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           />
         </View>
         <TouchableOpacity
-          onPress={() => setFiltersVisible(!filtersVisible)}
-          className="absolute right-6">
+          onPress={() => {
+            setFiltersVisible(!filtersVisible);
+          }}
+          className="absolute right-6"
+          hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}>
           <FiltersIcon />
         </TouchableOpacity>
       </View>
 
       {!filtersVisible && (
-        // <View
-        //   className="absolute top-[50px] z-[-1] mt-3 flex h-12 w-full flex-row items-center justify-center rounded-[28px] bg-white px-4"
-        //   style={{
-        //     shadowColor: '#000',
-        //     shadowOffset: { width: 0, height: 0 },
-        //     shadowOpacity: 0.4,
-        //     shadowRadius: 12,
-        //     elevation: 4,
-        //   }}>
-        //   <TouchableOpacity
-        //     className="absolute right-0 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-white"
-        //     style={{
-        //       shadowColor: '#000',
-        //       shadowOffset: { width: 0, height: 0 },
-        //       shadowOpacity: 0.4,
-        //       shadowRadius: 12,
-        //       elevation: 4,
-        //     }}>
-        //     <CalendarIcon width={24} height={24} color="#000000" />
-        //   </TouchableOpacity>
-        //   <Text className="text-[14px] font-semibold text-black">26 Aug 2024</Text>
-        //   <TouchableOpacity
-        //     className="absolute right-0 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-white"
-        //     style={{
-        //       shadowColor: '#000',
-        //       shadowOffset: { width: 0, height: 0 },
-        //       shadowOpacity: 0.4,
-        //       shadowRadius: 12,
-        //       elevation: 4,
-        //     }}>
-        //     <CalendarIcon width={24} height={24} color="#000000" />
-        //   </TouchableOpacity>
-        // </View>
         <View className="absolute top-[75px] mt-3 flex w-full items-center justify-center">
           <View className="absolute right-0">
             <TouchableOpacity
               className="flex h-[52px] w-[52px] items-center justify-center rounded-full bg-white"
-              onPress={() => setCalendarVisible(!calendarVisible)}
+              onPress={(event) => {
+                setCalendarOpen(true);
+                setCalendarVisible(true);
+              }}
               style={{
                 shadowColor: '#000',
                 shadowOffset: { width: 0, height: 0 },
@@ -156,7 +177,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               <CalendarIcon width={24} height={24} color="#000000" />
             </TouchableOpacity>
           </View>
-          {calendarVisible && (
+          {formatGroupedDates() && (
             <View
               className="absolute z-[-1] flex h-12 w-full flex-row items-center justify-center rounded-[28px] bg-white px-4"
               style={{
@@ -166,7 +187,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                 shadowRadius: 12,
                 elevation: 4,
               }}>
-              <Text className="text-[14px] font-semibold text-black">26 Aug 2024</Text>
+              <Text
+                className="w-[80%] pr-4 text-center text-[14px] font-semibold text-black"
+                numberOfLines={1}>
+                {formatGroupedDates() || 'No dates selected'}
+              </Text>
             </View>
           )}
         </View>
@@ -246,6 +271,45 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           </View>
         </View>
       )}
+
+      <Modal visible={calendarVisible} animationType="none" transparent statusBarTranslucent={true}>
+        <View style={styles.modalContainer}>
+          <View className="rounded-[24px] bg-white">
+            <Calendar
+              onDayPress={(day) => handleDateSelect(day.dateString)}
+              markedDates={selectedDates}
+              minDate={dayjs().format('YYYY-MM-DD')}
+              enableSwipeMonths
+              style={{ borderRadius: 20, padding: 10, margin: 20 }}
+            />
+          </View>
+          <View className="mt-4 flex flex-row gap-2">
+            <TouchableOpacity
+              className="flex-1 rounded-[16px] bg-[#005AD0] p-4"
+              onPress={() => setSelectedDates({})}>
+              <Text className="text-center font-semibold text-[#FFFFFF]">Clear all</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="flex-1 rounded-[16px] bg-[#FFFFFF] p-4"
+              onPress={() => {
+                setCalendarVisible(false);
+                setCalendarOpen(false);
+              }}>
+              <Text className="text-center font-semibold text-[#005AD0]">Done</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    height: '100%',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+    paddingHorizontal: 24,
+  },
+});

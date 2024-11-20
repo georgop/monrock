@@ -32,14 +32,14 @@ export const Drawer: React.FC<DrawerProps> = ({ drawerOpen, setDrawerOpen }) => 
   useEffect(() => {
     Animated.timing(animation, {
       toValue: drawerOpen ? 1 : 0,
-      duration: 300,
+      duration: 200,
       useNativeDriver: true,
     }).start();
   }, [drawerOpen, animation]);
 
   const translateX = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: [-300, 0],
+    outputRange: [-1000, 0],
   });
 
   const toggleDrawer = () => {
@@ -76,54 +76,62 @@ export const Drawer: React.FC<DrawerProps> = ({ drawerOpen, setDrawerOpen }) => 
           </View>
           <View className="flex h-[70%] w-full justify-around px-[50px] py-8">
             <TouchableOpacity
+              hitSlop={{ top: 50, bottom: 50, left: 100, right: 50 }}
               className="flex flex-row items-center gap-3"
               onPress={() => navigation.navigate('Home')}>
               <MapIcon />
-              <Text className="text-[20px] font-semibold text-[#005AD0]">Map</Text>
+              <Text className="text-[14px] font-semibold text-[#005AD0]">Map</Text>
             </TouchableOpacity>
             <TouchableOpacity
+              hitSlop={{ top: 10, bottom: 10, left: 100, right: 50 }}
               className="flex flex-row items-center gap-3"
               onPress={() => navigation.navigate('Scheduled')}>
               <ScheduledIcon width={16} height={16} />
-              <Text className="text-[20px] font-semibold text-[#005AD0]">Scheduled playbacks</Text>
+              <Text className="text-[14px] font-semibold text-[#005AD0]">Scheduled playbacks</Text>
             </TouchableOpacity>
             <TouchableOpacity className="flex flex-row items-center gap-3">
               <FavouritesIcon />
-              <Text className="text-[20px] font-semibold text-[#c0d7f5]">Favourites</Text>
+              <Text className="text-[14px] font-semibold text-[#c0d7f5]">Favourites</Text>
             </TouchableOpacity>
             <TouchableOpacity
               className="flex flex-row items-center gap-3"
+              hitSlop={{ top: 10, bottom: 10, left: 100, right: 50 }}
               onPress={() => navigation.navigate('MediaLibrary')}>
               <MediaLibraryIcon width={16} height={16} />
-              <Text className="text-[20px] font-semibold text-[#005AD0]">Media Library</Text>
+              <Text className="text-[14px] font-semibold text-[#005AD0]">Media Library</Text>
             </TouchableOpacity>
             <TouchableOpacity
               className="flex flex-row items-center gap-3"
+              hitSlop={{ top: 10, bottom: 10, left: 100, right: 50 }}
               onPress={() => navigation.navigate('History')}>
               <HistoryIcon width={16} height={16} />
-              <Text className="text-[20px] font-semibold text-[#005AD0]">History</Text>
+              <Text className="text-[14px] font-semibold text-[#005AD0]">History</Text>
             </TouchableOpacity>
             <TouchableOpacity
               className="flex flex-row items-center gap-3"
+              hitSlop={{ top: 10, bottom: 10, left: 100, right: 50 }}
               onPress={() => navigation.navigate('Account')}>
               <AccountIcon width={16} height={16} />
-              <Text className="text-[20px] font-semibold text-[#005AD0]">Account</Text>
+              <Text className="text-[14px] font-semibold text-[#005AD0]">Account</Text>
             </TouchableOpacity>
             <TouchableOpacity className="flex flex-row items-center gap-3">
               <FindProIcon />
-              <Text className="text-[20px] font-semibold text-[#c0d7f5]">Find a pro</Text>
+              <Text className="text-[14px] font-semibold text-[#c0d7f5]">Find a pro</Text>
             </TouchableOpacity>
             <TouchableOpacity className="flex flex-row items-center gap-3">
               <AboutIcon />
-              <Text className="text-[20px] font-semibold text-[#c0d7f5]">About</Text>
+              <Text className="text-[14px] font-semibold text-[#c0d7f5]">About</Text>
             </TouchableOpacity>
             <TouchableOpacity className="flex flex-row items-center gap-3">
               <HelpIcon />
-              <Text className="text-[20px] font-semibold text-[#c0d7f5]">Help</Text>
+              <Text className="text-[14px] font-semibold text-[#c0d7f5]">Help</Text>
             </TouchableOpacity>
-            <TouchableOpacity className="flex flex-row items-center gap-3" onPress={logout}>
+            <TouchableOpacity
+              className="flex flex-row items-center gap-3"
+              onPress={logout}
+              hitSlop={{ top: 10, bottom: 10, left: 100, right: 50 }}>
               <LogoutIcon />
-              <Text className="text-[20px] font-semibold text-[#005AD0]">Logout</Text>
+              <Text className="text-[14px] font-semibold text-[#005AD0]">Logout</Text>
             </TouchableOpacity>
           </View>
         </View>

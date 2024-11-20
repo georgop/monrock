@@ -103,7 +103,7 @@ const Login: React.FC = () => {
             </Animated.View>
           </Pressable>
           <TouchableOpacity
-            className="mt-4 rounded-[999px] rounded-lg border-[1px] border-[#FFFFFF] bg-[#005AD0] px-6 py-3"
+            className="mt-4 rounded-[99px] rounded-lg border-[1px] border-[#FFFFFF] bg-[#005AD0] px-6 py-3"
             onPress={handleLogin}>
             <Text className="text-[18px] font-bold text-[#FFFFFF]">Login</Text>
           </TouchableOpacity>

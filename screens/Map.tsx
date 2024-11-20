@@ -10,10 +10,9 @@ import { advertisingSpots } from 'mocks/data';
 import { MarkerModal } from 'components/Home/MarkerModal';
 import { AdvertisingSpot } from 'mocks/types';
 
-export const Home = () => {
+export const Map = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const mapRef = useRef<MapView>(null);
-  const [animation] = useState(new Animated.Value(0));
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
@@ -52,6 +51,8 @@ export const Home = () => {
     }, [])
   );
 
+  const [calendarOpen, setCalendarOpen] = useState(false);
+
   return (
     <View className="flex-1">
       <MapView
@@ -85,7 +86,9 @@ export const Home = () => {
                 latitude: marker.latitude,
                 longitude: marker.longitude,
               }}
-              onPress={() => handleMarkerPress(marker)}
+              onPress={() => {
+                if (!calendarOpen) handleMarkerPress(marker);
+              }}
               tracksViewChanges={false}
               hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}>
               <MarkerIcon
@@ -116,6 +119,7 @@ export const Home = () => {
           selectedFilters={selectedFilters}
           setSelectedFilters={setSelectedFilters}
           setLocation={setLocation}
+          setCalendarOpen={setCalendarOpen}
         />
       </View>
       <View className="absolute bottom-14 left-5 right-5 z-10">
@@ -124,5 +128,3 @@ export const Home = () => {
     </View>
   );
 };
-
-export default Home;
