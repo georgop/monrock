@@ -1,20 +1,19 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, View, Image, Easing } from 'react-native';
+import { View, Image } from 'react-native';
 import { Logo } from 'assets/Logo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SplashScreenText } from 'assets/svg/SplashScreenText';
+import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
 
 export const SplashScreen = () => {
-  const translateY = useRef(new Animated.Value(-300)).current;
+  const translateY = useSharedValue(-300);
 
   useEffect(() => {
-    Animated.timing(translateY, {
-      toValue: 40,
-      duration: 800,
-      easing: Easing.inOut(Easing.ease),
-      useNativeDriver: true,
-    }).start();
-  }, [translateY]);
+    translateY.value = withTiming(40, {
+      duration: 1000,
+      easing: Easing.bounce,
+    });
+  }, []);
 
   return (
     <LinearGradient colors={['#005AD0', '#05E1FF']} style={{ flex: 1 }}>

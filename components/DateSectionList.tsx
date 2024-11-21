@@ -4,6 +4,7 @@ import { format, addDays, startOfMonth, endOfMonth, eachDayOfInterval } from 'da
 import { CheckedCheckbox } from 'assets/svg/CheckedCheckbox';
 import { EmptyCheckbox } from 'assets/svg/EmptyCheckbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Monitor } from 'mocks/types';
 
 type SectionData = {
   title: string;
@@ -35,13 +36,18 @@ const generateDateSections = (): SectionData[] => {
 
 export type DateSectionListProps = {
   setIsOpen: (value: boolean) => void;
+  monitorFromProps?: Monitor;
+  withoutCheckbox?: boolean;
 };
 
-export const DateSectionList: React.FC<DateSectionListProps> = ({ setIsOpen }) => {
+export const DateSectionList: React.FC<DateSectionListProps> = ({
+  setIsOpen,
+  monitorFromProps,
+  withoutCheckbox,
+}) => {
   const sections = generateDateSections();
   const [selectedDates, setSelectedDates] = useState<Record<string, { price: number }>>({});
-
-  const [selectedMonitor, setSelectedMonitor] = useState<any>();
+  const [selectedMonitor, setSelectedMonitor] = useState<any | null>(null);
 
   useEffect(() => {
     const loadSelectedMonitor = async () => {
@@ -49,6 +55,8 @@ export const DateSectionList: React.FC<DateSectionListProps> = ({ setIsOpen }) =
         const storedMonitor = await AsyncStorage.getItem('selectedMonitor');
         if (storedMonitor) {
           setSelectedMonitor(JSON.parse(storedMonitor));
+        } else if (monitorFromProps) {
+          setSelectedMonitor(monitorFromProps);
         }
       } catch (error) {
         console.error('Failed to load monitor from AsyncStorage', error);
@@ -56,7 +64,7 @@ export const DateSectionList: React.FC<DateSectionListProps> = ({ setIsOpen }) =
     };
 
     loadSelectedMonitor();
-  }, []);
+  }, [monitorFromProps]);
 
   useEffect(() => {
     const loadSelectedDates = async () => {
@@ -74,12 +82,15 @@ export const DateSectionList: React.FC<DateSectionListProps> = ({ setIsOpen }) =
   }, []);
 
   const toggleDateSelection = async (date: string, price: number) => {
+    if (withoutCheckbox) {
+      return;
+    }
     const newSelections = { ...selectedDates };
 
     if (newSelections[date]) {
-      delete newSelections[date]; // Unselect date
+      delete newSelections[date];
     } else {
-      newSelections[date] = { price }; // Select date
+      newSelections[date] = { price };
     }
 
     setSelectedDates(newSelections);
@@ -98,17 +109,20 @@ export const DateSectionList: React.FC<DateSectionListProps> = ({ setIsOpen }) =
       <SectionList
         sections={sections}
         keyExtractor={(item, index) => item + index}
-        renderItem={({ item, index }) => {
+        renderItem={({ item }) => {
           const dateStr = format(new Date(item), 'yyyy-MM-dd');
           const day = format(new Date(item), 'EEE');
           const dayNumber = format(new Date(item), 'dd');
 
-          // Price based on weekday or weekend
           const price = day === 'Sat' || day === 'Sun' ? 15 : 5;
 
           const isSelected = !!selectedDates[dateStr];
-          const bookedAdSpaces = selectedMonitor.monitorSchedule[index].bookedAdSpaces;
-          const totalAdSpaces = selectedMonitor.monitor.totalAdSpaces;
+          const currentDayIndex = sections.flatMap((section) => section.data).indexOf(item);
+
+          const bookedAdSpaces = selectedMonitor.monitorSchedule
+            ? selectedMonitor.monitorSchedule[currentDayIndex]?.bookedAdSpaces
+            : 0;
+          const totalAdSpaces = selectedMonitor.monitor?.totalAdSpaces || 0;
 
           const backgroundColor =
             totalAdSpaces - bookedAdSpaces === 0
@@ -133,7 +147,7 @@ export const DateSectionList: React.FC<DateSectionListProps> = ({ setIsOpen }) =
                   <Text className="font-semibold">{price.toFixed(2)} € / per second</Text>
                 </View>
               </View>
-              {isSelected ? <CheckedCheckbox /> : <EmptyCheckbox />}
+              {!withoutCheckbox && <>{isSelected ? <CheckedCheckbox /> : <EmptyCheckbox />}</>}
             </TouchableOpacity>
           );
         }}
