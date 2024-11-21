@@ -137,7 +137,7 @@ export const DateSectionList: React.FC<DateSectionListProps> = ({
               style={{ backgroundColor: backgroundColor }}
               onPress={() => toggleDateSelection(dateStr, price)}>
               <View className="mt-2 flex flex-row items-center">
-                <Text className="text-[36px] font-semibold leading-[48px] text-[#02326F]">
+                <Text className="w-[40%] text-[36px] font-semibold leading-[48px] text-[#02326F]">
                   {dayNumber} <Text className="text-[28px]">{day}</Text>
                 </Text>
                 <View className="ml-4">
