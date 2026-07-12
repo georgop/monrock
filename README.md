@@ -1,6 +1,48 @@
+# Monitor Rental Advertising Platform
 
-# Monrock
+A custom mobile advertising platform built before the widespread adoption of AI-assisted development. The application enables businesses and individuals to discover, rent, and manage digital advertising spaces across Athens through an interactive map-based experience.
 
+Users can explore available monitor locations, select advertising slots, upload promotional content, and schedule video campaigns. Each advertising slot is structured into 20-second intervals, with transparent pricing based on the selected duration.
+
+## Key Features
+
+* **Interactive Map-Based Advertising Selection**
+
+  * Browse available digital display locations across Athens.
+  * Select and rent advertising spaces directly through the map interface.
+
+* **Video Advertising Management**
+
+  * Upload promotional videos and manage personal media content.
+  * Automatically organize campaigns into 20-second advertising slots.
+  * Create and manage playlists for scheduled playback.
+
+* **Campaign & Billing Management**
+
+  * Track advertising costs and individual slot charges.
+  * View payment history and previous campaigns.
+  * Maintain a complete record of advertising activity.
+
+* **Personal Media Library**
+
+  * Dedicated video gallery for uploaded content.
+  * Playlist management for organizing advertising campaigns.
+
+* **Custom Mobile Experience**
+
+  * Animated splash screen.
+  * Custom-built modals and navigation flows.
+  * Smooth and responsive user interactions.
+
+## Technology Stack
+
+* **React Native** — Cross-platform mobile application development
+* **TypeScript** — Type-safe application architecture
+* **NativeWind** — Utility-first styling with Tailwind-inspired workflows
+* **Expo** — Application development, deployment, and native tooling
+* **Custom Navigation & UI Components** — Tailored user experience and application flows
+
+The project demonstrates a complete end-to-end mobile application architecture, combining location-based discovery, media management, scheduling, and transaction tracking into a unified advertising ecosystem.
 
 
 
